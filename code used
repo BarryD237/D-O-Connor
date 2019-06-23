@@ -1,0 +1,47 @@
+Fastqc identified 'illumina universal adapter' in ~20% of samples. 
+
+Cutadapt was used to remove the illimina universal adapter:
+
+#!/bin/bash
+#
+#SBATCH -n 8
+#SBATCH --job-name=cutadapt
+#SBATCH -o cutadapt.out # STDOUT
+#SBATCH -e cutadapt.err # STDERR
+
+while read x y; do
+
+        base1=$(basename $x .fastq.gz)
+        base2=$(basename $y .fastq.gz)
+
+        cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG \
+        -o ../trimmed_reads/"${base1}".fastq.gz \
+        -p ../trimmed_reads/"${base2}".fastq.gz \
+        $x $y
+
+done < file_list.txt
+
+Fastqc analysis after trimming showed no adapter contamination, however the read length distribution was of slight concern.
+Trimming the adapters from the ~20% of reads containing them resulted in reads ranging from 2bp - 150bp.
+Multi mapping issue?
+
+Kallisto quant code: 
+
+#!/bin/bash
+#
+#SBATCH -p highmem
+#SBATCH -n 8
+#SBATCH --job-name=kallisto
+#SBATCH -o kallisto.out # STDOUT
+#SBATCH -e kallisto.err # STDERR
+
+reference=/data/bdigby/D_O_Connor/reference/Homo_sapiens.GRCh38.cdna.all.fa.idx
+
+while read x y; do
+
+        base=$(basename $x .fastq.gz | sed 's/_.*//')
+
+        kallisto quant -i $reference -o ../Quantification/"${base}" --bias $x $y
+
+        done < file_list.txt
+        
