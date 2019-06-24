@@ -1,4 +1,5 @@
 Fastqc identified 'illumina universal adapter' in ~20% of samples. 
+Sequence used was common to truseq adapters (see here: https://support.illumina.com/bulletins/2016/12/what-sequences-do-i-use-for-adapter-trimming.html)
 
 Cutadapt was used to remove the illimina universal adapter:
 
@@ -23,7 +24,8 @@ while read x y; do
 done < file_list.txt
 
 Fastqc analysis after trimming showed no adapter contamination, however the read length distribution was of slight concern.
-Setting -m to 32 as kallisto uses 31 kmer lenght for mapping. 
+Setting -m to 32 as kallisto uses 31 kmer length for mapping. 
+#### if -m option not used, kallisto performs miserably
 
 Kallisto quant code: 
 
