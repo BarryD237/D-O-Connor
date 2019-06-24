@@ -17,13 +17,13 @@ while read x y; do
         cutadapt -a AGATCGGAAGAG -A AGATCGGAAGAG \
         -o ../trimmed_reads/"${base1}".fastq.gz \
         -p ../trimmed_reads/"${base2}".fastq.gz \
+        -m 32 \
         $x $y
 
 done < file_list.txt
 
 Fastqc analysis after trimming showed no adapter contamination, however the read length distribution was of slight concern.
-Trimming the adapters from the ~20% of reads containing them resulted in reads ranging from 2bp - 150bp.
-Multi mapping issue?
+Setting -m to 32 as kallisto uses 31 kmer lenght for mapping. 
 
 Kallisto quant code: 
 
