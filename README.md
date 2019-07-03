@@ -187,6 +187,57 @@ Given the results of the eigen correlation plots, we can see that **patient** an
 design= ~Patient + Age + Condition
 ```
 ***
+# Inspecting the Data
+```R
+hist(res$log2FoldChange, breaks=50, col="seagreen", xlab="(Fold change) Tumour vs Normal", main="Distribution of differential expression values")
+abline(v=c(-2,2), col="black", lwd=2, lty=2)
+legend("topright", "Fold change <-2 and >2", lwd=2, lty=2)
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/dist_exp_val.png)
+
+```R
+hist(res$pvalue, breaks=50, col="seagreen", xlab="P-Value (Fold change) Tumour vs. Normal", main="Distribution of P-Values") 
+abline(v=c(0.05),col="black",lwd=2,lty=2)
+legend("topright", "P-Value <0.05",lwd=2,lty=2)
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/dist_pval.png)
+
+```R
+hist(res$padj, breaks=50, col="seagreen", xlab="P-Adj (Fold change) Tumour vs. Normal", main="Distribution of AdjP-Values") 
+abline(v=c(0.05),col="black",lwd=2,lty=2)
+legend("topright", "P-Adj <0.05",lwd=2,lty=2)
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/dist_adj-pval.png)
+
+```R
+resLFC <- lfcShrink(dds, coef="Condition_Tumour_vs_Normal", type="apeglm")
+
+plotMA(resLFC, alpha = 0.05, ylim=c(-4,4))
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/maplot.png)
+
+```R
+resOrdered <- res[order(res$padj),]
+
+plot(resOrdered$log2FoldChange, resOrdered$padj, col="black", pch=1, cex=1.1,  main="Tumour vs. Normal Volcano Plot")
+fsig <-rownames(subset(resOrdered, log2FoldChange > 1 | log2FoldChange < -1,))
+fsig_resOrdered_plot=resOrdered[fsig,]
+points(fsig_resOrdered_plot$log2FoldChange, fsig_resOrdered_plot$padj, col="green", pch=19, cex=1.1)
+psig <-rownames(subset(resOrdered, pvalue < 0.05))
+psig_resOrdered_plot=resOrdered[psig,]
+points(psig_resOrdered_plot$log2FoldChange, psig_resOrdered_plot$padj, col="blue", pch=18, cex=0.5)
+qsig <-rownames(subset(resOrdered, padj < 0.05))
+qsig_resOrdered_plot=resOrdered[qsig,]
+points(qsig_resOrdered_plot$log2FoldChange, qsig_resOrdered_plot$padj, col="red", pch=8, cex=0.03)
+abline(v=c(1,-1), col="black", lwd=1)
+abline(h=0.05, col="red",lwd=1)
+legend_text = c("<-1 or >1 Log2-Fold-Change", "p-value<0.05", "Adj-P-Value<0.05")
+legend_text2 = c("P-Adj <0.05", "Log2-Fold-Change -1 to 1")
+legend("topleft", legend_text,bty="n",pch = c(19,18,8), col=c("green","blue","red"))
+legend("topright", legend_text2, bty = "n", lty=c(1, 1), col=c("red", "black"))
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/volcano.png)
+***
 # Differential Gene Expression Analysis
 Analysis was conducted according to the following code:
 ```R
