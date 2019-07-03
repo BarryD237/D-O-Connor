@@ -75,7 +75,12 @@ To read the abundance files into R, follow the code below:
 dir <- ("/Users/barrydigby/Desktop/D_OConnor/Quantification")
 
 samples <- read.table(file.path(dir, "Exp_Design.csv"),sep=",", header=T, row.names = "samples")
- 
+
+#Correction added (R cannot use + and - in factor levels, treats both as X. resulting in duplicates) 
+samples$ER <- revalue(samples$ER, c('ER-'='ER'))
+samples$PR <- revalue(samples$PR, c('PR-'='PR'))
+samples$LVI <- revalue(samples$LVI, c('LVI-'='LVI'))
+
 files <- file.path(dir, rownames(samples), "abundance.h5")
 names(files) <- paste0(rownames(samples))
 ```
