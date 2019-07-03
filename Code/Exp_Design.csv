@@ -1,0 +1,25 @@
+﻿samples,Patient,Condition,Age,Size,Grade,Histology,ER,PR,LVI
+4033,1,Tumour,46,45,Grade 2,Lobular,ER+,PR+,LVI-
+4034,1,Normal,46,45,Grade 2,Lobular,ER+,PR+,LVI-
+4027,2,Tumour,77,40,Grade 3,Ductal,ER-,PR-,LVI+
+4028,2,Normal,77,40,Grade 3,Ductal,ER-,PR-,LVI+
+4112,3,Tumour,62,12,Grade 3,Ductal,ER+,PR-,LVI-
+4113,3,Normal,62,8,Grade 3,Ductal,ER+,PR-,LVI-
+4116,4,Tumour,45,35,Grade 2,Lobular,ER+,PR+,LVI+
+4117,4,Normal,45,13,Grade 2,Lobular,ER+,PR+,LVI+
+4214,5,Tumour,78,90,Grade 2,Lobular,ER+,PR-,LVI+
+4215,5,Normal,78,90,Grade 2,Lobular,ER+,PR-,LVI+
+4315,6,Tumour,84,30,Grade 2,Ductal,ER+,PR+,LVI+
+4316,6,Normal,84,22,Grade 2,Ductal,ER+,PR+,LVI+
+4340,7,Tumour,62,100,Grade 2,Lobular,ER+,PR+,LVI-
+4341,7,Normal,62,100,Grade 2,Lobular,ER+,PR+,LVI-
+4344,8,Tumour,50,28,Grade 2,Ductal,ER+,PR+,LVI-
+4345,8,Normal,50,28,Grade 2,Ductal,ER+,PR+,LVI-
+3532,9,Tumour,48,16,Grade 2,Ductal,ER+,PR+,LVI-
+3533,9,Normal,48,16,Grade 2,Ductal,ER+,PR+,LVI-
+3536,10,Tumour,50,52,Grade 3,Lobular,ER+,PR+,LVI-
+3537,10,Normal,50,52,Grade 3,Lobular,ER+,PR+,LVI-
+4299,11,Tumour,84,40,Grade 3,Ductal,ER+,PR+,LVI+
+4300,11,Normal,84,40,Grade 3,Ductal,ER+,PR+,LVI+
+4722,12,Tumour,81,52,Grade 2,Lobular,ER+,PR-,LVI-
+4723,12,Normal,81,52,Grade 2,Lobular,ER+,PR-,LVI-
