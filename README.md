@@ -6,5 +6,8 @@ The first step in the workflow is to perform a standard Quality Control analysis
 
 Code used to run FASTQC can be found in: 
 ```
-Code/FASTQC
+Code/FASTQC.sh
 ```
+### FASTQC Results (Raw Data)
+Inspecting the MulitQC concatenated report of the Raw Data, we can see that the sequence quality of the reads is of high quality: 
+![alt text] (https://github.com/BarryD237/D-O-Connor/blob/master/Images/fastqc_per_base_sequence_quality_plot_before.png)
