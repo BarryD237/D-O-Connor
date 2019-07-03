@@ -97,12 +97,14 @@ results <- getBM(attributes = c("ensembl_transcript_id_version", "ensembl_gene_i
 ```
 # Convert transcript quantification to gene-level abundances
 For this step use the package **tximport**. Per the [bioconductor page](https://bioconductor.org/packages/release/bioc/html/tximport.html): "Imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts."
+
 ```R
 tx2gene <- results[, 1:2]
 
 txi <- tximport(files, type = "kallisto", tx2gene = tx2gene)
 ```
-# Running DESeq2
+
+#Running DESeq2
 Run the follwing R code to provide the read counts to the DDS object:
 ```R
 dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~ Patient + Condition)
@@ -115,7 +117,7 @@ The design is specified as:
 ```
 This design specifies pairwise comparisons for DESeq2, controlling for patient specific factors, resulting in Tumour vs. Normal comparisons. 
 
-# PCA
+#PCA
 PCA was used to identify further sources of variation that must be accounted for in the DESeq2 model. To perform PCA, first obtain the regularized logarithm of the counts matrix. Then run the following code:
 ```R
 x <- rlog(counts(dds), blind=TRUE)
