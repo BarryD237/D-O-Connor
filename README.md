@@ -79,4 +79,8 @@ samples <- read.table(file.path(dir, "Exp_Design.csv"),sep=",", header=T, row.na
 files <- file.path(dir, rownames(samples), "abundance.h5")
 names(files) <- paste0(rownames(samples))
 ```
-Exp-Design.csv is a .csv file that contains the metadata for the experiment (Tumour status, grade, size etc..)
+Exp-Design.csv is a .csv file that contains the metadata for the experiment (Tumour status, grade, size etc..) which can be found at 
+```
+Code/Exp_Design.csv
+```
+
