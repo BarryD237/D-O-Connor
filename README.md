@@ -102,4 +102,80 @@ tx2gene <- results[, 1:2]
 
 txi <- tximport(files, type = "kallisto", tx2gene = tx2gene)
 ```
+# Running DESeq2
+Run the follwing R code to provide the read counts to the DDS object:
+```R
+dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~ Patient + Condition)
+dds$type <- relevel(dds$Condition, ref = "Normal") 
+dds<- DESeq(dds)
+```
+The design is specified as:
+```
+~ Patient + Condition
+```
+This design specifies pairwise comparisons for DESeq2, controlling for patient specific factors, resulting in Tumour vs. Normal comparisons. 
 
+# PCA
+PCA was used to identify further sources of variation that must be accounted for in the DESeq2 model. To perform PCA, first obtain the regularized logarithm of the counts matrix. Then run the following code:
+```R
+x <- rlog(counts(dds), blind=TRUE)
+
+p <- pca(x, metadata = samples, removeVar = 0.1)
+
+screeplot(p,
+  components = getComponents(p, 1:24),
+  hline = 80, vline = 10) +
+  geom_text(aes(20, 80, label = '80% explained variation', vjust = -1))
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/Scree_plot.png)
+
+```R
+biplot(p,
+  colby = 'Condition', colkey = c('Tumour'='royalblue', 'Normal'='red1'),
+  hline = 0, vline = 0,
+  legendPosition = 'right', legendLabSize = 12, legendIconSize = 8.0,
+  drawConnectors = TRUE,
+  title = 'PCA bi-plot',
+  subtitle = 'PC1 versus PC2')
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/bi-plot-PCA.png)
+
+```R
+eigencorplot(p,
+    components = getComponents(p, 1:10),
+    metavars = c('Patient','Condition','Age','Size','Grade','Histology','ER','PR', 'LVI'),
+    col = c('darkblue', 'blue2', 'black', 'red2', 'darkred'),
+    cexCorval = 0.7,
+    colCorval = 'white',
+    fontCorval = 2,
+    posLab = 'bottomleft',
+    rotLabX = 45,
+    posColKey = 'top',
+    cexLabColKey = 1.5,
+    scale = TRUE,
+    main = 'PC1-10 clinical correlations',
+    colFrame = 'white',
+    plotRsquared = FALSE)
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/eigencor.png)
+
+```R
+  eigencorplot(p,
+    components = getComponents(p, 1:10),
+    metavars = c('Patient', 'Condition','Age','Size','Grade','Histology','ER','PR', 'LVI'),
+    col = c('white', 'cornsilk1', 'gold', 'forestgreen', 'darkgreen'),
+    cexCorval = 1.2,
+    fontCorval = 2,
+    posLab = 'all',
+    rotLabX = 45,
+    scale = TRUE,
+    main = bquote(Principal ~ component ~ Pearson ~ r^2 ~ clinical ~ correlates),
+    plotRsquared = TRUE,
+    corFUN = 'pearson',
+    corUSE = 'pairwise.complete.obs',
+    signifSymbols = c('****', '***', '**', '*', ''),
+    signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
+```
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/pearson_eigcor.png)
+***
+Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **Age** has sufficient weight in PC2 to be factored into the DESeq2 model. **PR** also carries weight on PC2, however I have decided to omit this factor from the DESeq2 model. **PR** is an indicator of pathological cancer status, however the model already corrects for cancer status (Tumour/Normal) using **Condition**. Unless the researcher wishes to investigate the data further by comparing **ER / PR / LVI** status, it is recommended to use a basic model at first. 
