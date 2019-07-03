@@ -83,4 +83,18 @@ Exp-Design.csv is a .csv file that contains the metadata for the experiment (Tum
 ```
 Code/Exp_Design.csv
 ```
+# Matching Transcript ID's to Gene ID's
+To match the mapped transcripts from the kallisto step to gene id's, we can use biomaRt. As the quantification was performed using ENSEMBL reference genome, the output for kallisto will be using ENSEMBL annotation. Convert as follows:
+```R
+mart <- useMart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+
+results <- getBM(attributes = c("ensembl_transcript_id_version", "ensembl_gene_id"), mart = mart)
+```
+# Convert transcript quantification to gene-level abundances
+For this step use the package **tximport**. Per the [bioconductor page](https://bioconductor.org/packages/release/bioc/html/tximport.html): "Imports transcript-level abundance, estimated counts and transcript lengths, and summarizes into matrices for use with downstream gene-level analysis packages. Average transcript length, weighted by sample-specific transcript abundance estimates, is provided as a matrix which can be used as an offset for different expression of gene-level counts."
+```R
+tx2gene <- results[, 1:2]
+
+txi <- tximport(files, type = "kallisto", tx2gene = tx2gene)
+```
 
