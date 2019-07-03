@@ -67,3 +67,5 @@ The two abundance files contain transcript quantification information. For downs
 Code/Quantification.sh
 ```
 ***
+This concludes the analysis performed on a high computing cluster. Moving forward, download the sample directories containing the abundance files via SFTP to your local machine. Further analysis will be conducted within the statistical package R. 
+***
