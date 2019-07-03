@@ -8,6 +8,18 @@ Code used to run FASTQC can be found in:
 ```
 Code/FASTQC.sh
 ```
-### FASTQC Results (Raw Data)
-Inspecting the MulitQC concatenated report of the Raw Data, we can see that the sequence quality of the reads is of high quality: 
+### FASTQC Sequence Quality: 
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/fastqc_per_base_sequence_quality_plot_before.png)
+### FASTQC Adapter Content:
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/fastqc_adapter_content_plot_before.png)
+
+We can see that there is ~20% adapter contamination present in the reads. Adapters will effect the alignment of the reads to the human cDNA, as adapters are foreign sequences and will not align anywhere in the human cDNA genome. Ultimately, this results in a loss of data. 
+
+# Adapter Trimming
+To remove the aforementioned adapters from the reads, we must use a trimming tool. FASTQC reports the suspected source of adapter contamination in the reads (Illumina Universal Adapter). The full adapter sequences can be found at this [link](https://support.illumina.com/bulletins/2016/12/what-sequences-do-i-use-for-adapter-trimming.html). 
+```
+TruSeq LT and TruSeq HT-based kits:
+
+  Read 1: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+  Read 2: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+```
