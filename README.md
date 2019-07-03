@@ -33,4 +33,12 @@ It is not neccessary to provide the whole Adapter sequence for trimming, the fir
 * -o Output for Read 1
 * -p Output for Read 2
 * -m Miminum Read length
+
 The minimum read length is crucial for downstream quantification with Kallisto. Kallisto by default uses a kmer size of 31, thus if we have reads present that are shorter than this, Kallisto performs poorly. 
+***
+# FASTQC on Trimmed Data
+After removing the adapters, run FASTQC on the trimmed data to make sure the trimming was performed correctly:
+### FASTQC Sequence Distribution:
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/fastqc_sequence_length_distribution_plot.png)
+### FASTQC Overrepresented Sequences/Adapter Contamination:
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/after_trimming.png)
