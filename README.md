@@ -259,8 +259,9 @@ The list of up-regulated and down-regulated genes can be found in:
 Results/DE/
 ```
 These genes have been filtered according to:
-* log fold change of 0.01
+* log fold change of 0.05
 * Adjusted Pvalue of 0.05 
+**this captures all genes returned by summary(res)**
 The results are then ranked according to log fold change and statistical significance
 ```R
 tmp=res
