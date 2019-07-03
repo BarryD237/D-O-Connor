@@ -46,7 +46,7 @@ After removing the adapters, run FASTQC on the trimmed data to make sure the tri
 The raw data has succesfully been cleaned and is now ready to be used for downstream transcript quantification. 
 ***
 # Transcript Quantification
-To perform transcriptome mapping of the reads, the human cDNA must be downloaded. It is important to use the cDNA, and not the human genome (DNA) to perform this step. Ensembl reference genomes and feature annotation files can be downloaded at the following [link](ftp://ftp.ensembl.org/pub/release-97/fasta/homo_sapiens/). Download the file:
+To perform transcriptome mapping of the reads, the human cDNA must be downloaded. It is important to use the cDNA, and not the human genome (DNA) to perform this step. Ensembl reference genomes and feature annotation files can be downloaded at the following [link](https://www.ensembl.org/Homo_sapiens/Info/Index). Download the file:
 ```
 Homo_sapiens.GRCh38.cdna.all.fa.gz
 ```
