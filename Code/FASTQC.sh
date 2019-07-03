@@ -7,6 +7,6 @@
 
 for f in *fastq.gz; do
 
-  fastqc $f ;
+  fastqc $f 
   
 done
