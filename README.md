@@ -69,3 +69,14 @@ Code/Quantification.sh
 ***
 This concludes the analysis performed on a high computing cluster. Moving forward, download the sample directories containing the abundance files via SFTP to your local machine. Further analysis will be conducted within the statistical package R. 
 ***
+# Reading files into R
+To read the abundance files into R, follow the code below:
+```R
+dir <- ("/Users/barrydigby/Desktop/D_OConnor/Quantification")
+
+samples <- read.table(file.path(dir, "Exp_Design.csv"),sep=",", header=T, row.names = "samples")
+ 
+files <- file.path(dir, rownames(samples), "abundance.h5")
+names(files) <- paste0(rownames(samples))
+```
+Exp-Design.csv is a .csv file that contains the metadata for the experiment (Tumour status, grade, size etc..)
