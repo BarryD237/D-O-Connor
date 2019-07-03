@@ -253,4 +253,88 @@ outliers [1]       : 0, 0%
 [1] see 'cooksCutoff' argument of ?results
 see metadata(res)$ihwResult on hypothesis weighting
 ```
+# Write DE genes to file
+The list of up-regulated and down-regulated genes can be found in:
+```
+Results/DE/
+```
+These genes have been filtered according to:
+* log fold change of 0.01
+* Adjusted Pvalue of 0.05 
+The results are then ranked according to log fold change and statistical significance
+```R
+tmp=res
+up = intersect(rownames(tmp)[which(tmp$log2FoldChange>=0.05)],rownames(tmp)[which(tmp$padj<=0.05)])
+down = intersect(rownames(tmp)[which(tmp$log2FoldChange<=-0.05)],rownames(tmp)[which(tmp$padj<=0.05)])
 
+Uptmp = as.data.frame((tmp)[which(rownames(tmp) %in% up),])
+Up = Uptmp[order(Uptmp$log2FoldChange),]
+
+Downtmp = as.data.frame((tmp)[which(rownames(tmp) %in% down),])
+Down = Downtmp[order(Downtmp$log2FoldChange),]
+
+write.csv(as.data.frame(Up),file = "Up_regulated_genes.csv")
+
+results_csv <- "Up_regulated_genes.csv"
+write.table(read.csv(results_csv), gsub(".csv",".txt",results_csv))
+results_txt <- "Up_regulated_genes.txt"
+
+a <- read.table(results_txt, head=TRUE)
+
+b <- getBM(attributes=c("ensembl_gene_id",
+                        "external_gene_name",
+                        "chromosome_name",
+                        "start_position",
+                        "end_position",
+                        "description"
+                        ),
+           filters = c("ensembl_gene_id"),
+           values = a$X,
+           mart = mart)
+
+biomart_results <- "Biomart.txt"
+
+write.table(b,file=biomart_results)
+
+m <- merge(b, a, by.x="ensembl_gene_id", by.y="X")
+
+#change - for upreg, remove for downreg
+
+final = m[order(-m$log2FoldChange,-m$padj),]
+
+write.csv(final, file='Up_Regulated.csv')
+
+# downreg
+
+write.csv(as.data.frame(Down),file = "Up_regulated_genes.csv")
+
+
+results_csv <- "Up_regulated_genes.csv"
+write.table(read.csv(results_csv), gsub(".csv",".txt",results_csv))
+results_txt <- "Up_regulated_genes.txt"
+
+a <- read.table(results_txt, head=TRUE)
+
+b <- getBM(attributes=c("ensembl_gene_id",
+                        "external_gene_name",
+                        "chromosome_name",
+                        "start_position",
+                        "end_position",
+                        "description"
+                        ),
+           filters = c("ensembl_gene_id"),
+           values = a$X,
+           mart = mart)
+
+biomart_results <- "Biomart.txt"
+
+write.table(b,file=biomart_results)
+
+m <- merge(b, a, by.x="ensembl_gene_id", by.y="X")
+
+#change - for upreg, remove for downreg
+
+final = m[order(m$log2FoldChange,m$padj),]
+
+write.csv(final, file='Down_Regulated.csv')
+```
