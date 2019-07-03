@@ -103,8 +103,8 @@ tx2gene <- results[, 1:2]
 
 txi <- tximport(files, type = "kallisto", tx2gene = tx2gene)
 ```
-
-#Running DESeq2
+***
+# Running DESeq2
 Run the follwing R code to provide the read counts to the DDS object:
 ```R
 dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~ Patient + Condition)
@@ -116,8 +116,8 @@ The design is specified as:
 ~ Patient + Condition
 ```
 This design specifies pairwise comparisons for DESeq2, controlling for patient specific factors, resulting in Tumour vs. Normal comparisons. 
-
-#PCA
+***
+# PCA
 PCA was used to identify further sources of variation that must be accounted for in the DESeq2 model. To perform PCA, first obtain the regularized logarithm of the counts matrix. Then run the following code:
 ```R
 x <- rlog(counts(dds), blind=TRUE)
@@ -181,3 +181,25 @@ eigencorplot(p,
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/pearson_eigcor.png)
 ***
 Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **Age** has sufficient weight in PC2 to be factored into the DESeq2 model. **PR** also carries weight on PC2, however I have decided to omit this factor from the DESeq2 model. **PR** is an indicator of pathological cancer status, however the model already corrects for cancer status (Tumour/Normal) using **Condition**. Unless the researcher wishes to investigate the data further by comparing **ER / PR / LVI** status, it is recommended to use a basic model at first. 
+
+### Corrected DESeq2 model:
+```
+design= ~Patient + Age + Condition
+```
+***
+# Differential Gene Expression Analysis
+Analysis was conducted according to the following code:
+```R
+res <- results(dds, filterFun=ihw, alpha=0.05, name="Condition_Tumour_vs_Normal")
+summary(res)
+```
+```
+out of 29357 with nonzero total read count
+adjusted p-value < 0.05
+LFC > 0 (up)       : 600, 2%
+LFC < 0 (down)     : 608, 2.1%
+outliers [1]       : 0, 0%
+[1] see 'cooksCutoff' argument of ?results
+see metadata(res)$ihwResult on hypothesis weighting
+```
+
