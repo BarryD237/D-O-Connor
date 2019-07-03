@@ -27,7 +27,7 @@ Code used to perform trimming can be found in:
 ```
 Code/Trimming.sh
 ```
-It is not neccessary to provide the whole Adapter sequence for trimming, the first 12bp is sufficient as cutadapt will trim the remaining read once it encounters the 12bp sequence. Further information on the flags used for cutadapt are:
+In this script, the file names are provided through a tab seperated text file **file_list.txt** which can be found in the Code directory. It is not neccessary to provide the whole Adapter sequence for trimming, the first 12bp is sufficient as cutadapt will trim the remaining read once it encounters the 12bp sequence. Further information on the flags used for cutadapt are:
 * -a Read 1 Adapter Sequence
 * -A Read 2 Adapter Sequence
 * -o Output for Read 1
@@ -42,3 +42,28 @@ After removing the adapters, run FASTQC on the trimmed data to make sure the tri
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/fastqc_sequence_length_distribution_plot.png)
 ### FASTQC Overrepresented Sequences/Adapter Contamination:
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/after_trimming.png)
+
+The raw data has succesfully been cleaned and is now ready to be used for downstream transcript quantification. 
+***
+# Transcript Quantification
+To perform transcriptome mapping of the reads, the human cDNA must be downloaded. It is important to use the cDNA, and not the human genome (DNA) to perform this step. Ensembl reference genomes and feature annotation files can be downloaded at the following [link](ftp://ftp.ensembl.org/pub/release-97/fasta/homo_sapiens/). Download the file:
+```
+Homo_sapiens.GRCh38.cdna.all.fa.gz
+```
+### Indexing the reference genome
+Before mapping reads to the human cDNA genome, an index of the reference file must first be created. This allows for fast random access to the bases in the genome when mapping. Use the mapping script found at:
+```
+Code/Index.sh
+```
+
+### Quantification
+Once the reference genome is indexed, we can now map the transcripts in the trimmed files to the reference cDNA. This will output a directory containing:
+1. abundance.h5
+2. abundance.tsv
+3. run_info.json
+
+The two abundance files contain transcript quantification information. For downstream analysis we can use either the .h5 file or the .tsv file. The difference between the .h5 and .tsv file is the .h5 file contains bootstrapping information if the option was specified during **kallisto quant**. We did not perform bootstrapping for this analysis. The code used to run this analysis can be found at:
+```
+Code/Quantification.sh
+```
+***
