@@ -6,5 +6,5 @@ The first step in the workflow is to perform a standard Quality Control analysis
 
 Code used to run FASTQC can be found in: 
 ```
-FASTQC
+Code/FASTQC
 ```
