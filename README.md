@@ -341,3 +341,15 @@ final = m[order(m$log2FoldChange,m$padj),]
 
 write.csv(final, file='Down_Regulated.csv')
 ```
+# Gene Set Enrichment Analysis (GSEA)
+GSEA requires expression data, this can be obtained from the dds object in DESeq2 (R):
+```R
+write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
+```
+Find the output file on your local machine, and edit it by adding "NAME" in row 1, column 1, and hit TAB. This can be done in a text editor. GSEA also requires a "Description" column (can be set to na), insert by  using the following commands in BASH:
+```console
+awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' D_Connor.counts.txt > test.txt 
+
+sed 's/ /\t/g' test.txt > D_Connor_counts.txt
+```
+
