@@ -342,6 +342,35 @@ final = m[order(m$log2FoldChange,m$padj),]
 write.csv(final, file='Down_Regulated.csv')
 ```
 # Gene Set Enrichment Analysis (GSEA)
+### Formatting files for GSEA input
+The required files for GSEA analysis are the following:
+
+1. Expression dataset in res, gct, pcl or txt format
+2. Phenotype labels in cls format
+3. Gene sets in gmx or gmt formt
+4. Chip annotations
+
+#### 1. Expression Dataset
+The analysis we are conducting is using RNA-Seq data, thus we can use the normalized counts from DESeq2: 
+
+```R
+write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 GSEA requires expression data, this can be obtained from the dds object in DESeq2 (R):
 ```R
 write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
