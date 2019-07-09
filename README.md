@@ -365,7 +365,7 @@ cat D_Connor.counts.txt \
 | awk -F"\t" '{if(NR==1) $1="NAME"FS$1}1' OFS="\t" \
 | awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' \
 | sed 's/ /\t/g' \
-| awk 'BEGIN{print "#1.2""\n"40275"\t"26}1' > D.Connor.gct
+| awk 'BEGIN{print "#1.2""\n"40275"\t"24}1' > D.Connor.gct
 ```
 
 The above code is summarized by the following steps:
@@ -390,32 +390,14 @@ This can be selected in GSEA
 
 #### 4. Chip Annotations
 The annotation format we are using is Ensembl Gene ID's. In GSEA select ENSEMBL_human_gene.chip
-
-
-
-
-
-
-
-
-
-
-
-
-
-GSEA requires expression data, this can be obtained from the dds object in DESeq2 (R):
-```R
-write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
-```
-Find the output file on your local machine, and edit it by adding "NAME" in row 1, column 1, and hit TAB. This can be done in a text editor. GSEA also requires a "Description" column (can be set to na), insert by  using the following commands in BASH:
-```console
-awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' D_Connor.counts.txt > test.txt 
-
-sed 's/ /\t/g' test.txt > D_Connor_counts.txt
-```
-GSEA also requires a .cls file, indicating the phentoype levels. The files used for GSEA input can be found in:
-```
-Code/D_Connor.cls
-Code/D_Connor_counts.txt
-```
 ***
+
+
+
+
+
+
+
+
+
+
