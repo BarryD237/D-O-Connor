@@ -352,4 +352,9 @@ awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' D_Connor.counts.txt > test.txt
 
 sed 's/ /\t/g' test.txt > D_Connor_counts.txt
 ```
-
+GSEA also requires a .cls file, indicating the phentoype levels. The files used for GSEA input can be found in:
+```
+Code/D_Connor.cls
+Code/D_Connor_counts.txt
+```
+***
