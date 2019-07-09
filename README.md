@@ -356,8 +356,40 @@ The analysis we are conducting is using RNA-Seq data, thus we can use the normal
 ```R
 write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
 ```
+Inspecting the file, we can see that the columns are shifted to the left:
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/GSEA_raw.png)
 
+This can be rectified using the following code:
+```console
+cat D_Connor.counts.txt \
+| awk -F"\t" '{if(NR==1) $1="NAME"FS$1}1' OFS="\t" \
+| awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' \
+| sed 's/ /\t/g' \
+| awk 'BEGIN{print "#1.2""\n"40275"\t"26}1' > D.Connor.gct
+```
 
+The above code is summarized by the following steps:
+
+```console
+awk -F"\t" '{if(NR==1) $1="NAME"FS$1}1' OFS="\t" D_Connor.counts.txt > tmp1.txt
+awk '{$1 = $1 OFS (NR==1?"Description":"na")}1' tmp1.txt > tmp2.txt
+sed 's/ /\t/g' tmp2.txt > tmp3.txt
+echo "$(cat tmp3.txt | wc -l)-1" | bc
+cat tmp3.txt | awk '{print NF;exit}'
+```
+
+#### 2. Phenotype labels
+```console
+24 2 1
+# Tumour Normal
+Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal Tumour Normal
+```
+
+#### 3. Gene Sets
+This can be selected in GSEA 
+
+#### 4. Chip Annotations
+The annotation format we are using is Ensembl Gene ID's. In GSEA select ENSEMBL_human_gene.chip
 
 
 
