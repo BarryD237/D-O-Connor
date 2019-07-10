@@ -354,7 +354,9 @@ The required files for GSEA analysis are the following:
 The analysis we are conducting is using RNA-Seq data, thus we can use the normalized counts from DESeq2: 
 
 ```R
-write.table(counts(dds), file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
+norm_counts <- counts(dds, normalized=TRUE)
+
+write.table(norm_counts, file="/Users/barrydigby/Desktop/D_Connor.counts.txt", append = TRUE, sep="\t", row.names = TRUE, col.names = TRUE, quote = FALSE)
 ```
 Inspecting the file, we can see that the columns are shifted to the left:
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/GSEA_raw.png)
