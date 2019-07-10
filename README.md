@@ -51,7 +51,7 @@ To perform transcriptome mapping of the reads, the human cDNA must be downloaded
 Homo_sapiens.GRCh38.cdna.all.fa.gz
 ```
 ### Indexing the reference genome
-Before mapping reads to the human cDNA genome, an index of the reference file must first be created. This allows for fast random access to the bases in the genome when mapping. Use the mapping script found at:
+Before mapping reads to the human cDNA genome, an index of the reference file must first be created. This allows for fast random access to the bases in the genome when mapping. Use the indexing script found at:
 ```
 Code/Index.sh
 ```
@@ -394,7 +394,30 @@ This can be selected in GSEA
 The annotation format we are using is Ensembl Gene ID's. In GSEA select ENSEMBL_human_gene.chip
 ***
 
+# GSEA Pre Ranked set
+GSEA provides the option to use a pre ranked gene list, where the most up regulated genes are at the top of the list, and the down regulated genes are at the bottom of the list. Unaffected genes lie in the middle of the list. To compute this list, use the results from DESeq2. We will need to convert the Ensembl gene ID's to gene symbols, and then calculate a metric score by dividing the -log10(pvalues) by the sign(log2foldchange):
+```R
+x <- as.data.frame(res)
 
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+library(EnsDb.Hsapiens.v86)
+
+x$Gene <- mapIds(EnsDb.Hsapiens.v86,
+                    keys=row.names(x),
+                    column ="SYMBOL",
+                    keytype = "GENEID",
+                    multiVals = "first")
+
+x$fcsign <- sign(x$log2FoldChange)
+x$logP = -log10(x$pvalue)
+x$metric = x$logP/x$fcsign
+
+y <- x[,c("Gene", "metric")]
+filt <- na.omit(y)
+
+write.table(filt, file="/Users/barrydigby/Desktop/DE_genes.rnk", quote = F, sep = "\t", row.names = F, col.names = F)
+```
 
 
 
