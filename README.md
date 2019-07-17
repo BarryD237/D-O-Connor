@@ -253,10 +253,10 @@ res <- results(dds, filterFun=ihw, alpha=0.05, name="Condition_Tumour_vs_Normal"
 summary(res)
 ```
 ```
-out of 29357 with nonzero total read count
+out of 17137 with nonzero total read count
 adjusted p-value < 0.05
-LFC > 0 (up)       : 600, 2%
-LFC < 0 (down)     : 608, 2.1%
+LFC > 0 (up)       : 586, 3.4%
+LFC < 0 (down)     : 603, 3.5%
 outliers [1]       : 0, 0%
 [1] see 'cooksCutoff' argument of ?results
 see metadata(res)$ihwResult on hypothesis weighting
