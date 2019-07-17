@@ -115,7 +115,7 @@ keep <- rowSums(nc >= 10) >= 4
 dds <- dds[keep,]
 dds <- DESeq(dds)
 ```
-Pre-filtering the dds object was necessary to rectify the error message given below. Two methods can be used to solve this; removing genes with low counts, or increasing the maximum number of iterations performed. I opted to remove genes with low counts, as this yielded a slightly higher number of differentially expressed genes. 
+Pre-filtering the dds object was necessary to rectify the error message given below. Two methods can be used to solve this; removing genes with low counts, or increasing the maximum number of iterations performed. I opted to remove genes with low counts, as this yielded a slightly higher number of differentially expressed genes. [link](https://support.bioconductor.org/p/65091/)
 
 > 2 rows did not converge in beta, labelled in mcols(object)$betaConv. Use larger maxit argument with nbinomWaldTest
 
