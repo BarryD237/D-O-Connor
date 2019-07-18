@@ -403,7 +403,7 @@ The annotation format we are using is Ensembl Gene ID's. In GSEA select ENSEMBL_
 ***
 
 # GSEA Pre Ranked set
-GSEA provides the option to use a pre ranked gene list, where the most up regulated genes are at the top of the list, and the down regulated genes are at the bottom of the list. Unaffected genes lie in the middle of the list. To compute this list, use the results from DESeq2. We will need to convert the Ensembl gene ID's to gene symbols, and then calculate a metric score by dividing the -log10(pvalues) by the sign(log2foldchange):
+GSEA provides the option to use a pre ranked gene list, where the most up regulated genes are at the top of the list, and the down regulated genes are at the bottom of the list. Unaffected genes lie in the middle of the list. To compute this list, use the results from DESeq2. We will need to convert the Ensembl gene ID's to gene symbols, and then calculate a metric score by dividing the -log10(pvalues) by the sign(log2foldchange) adapted from this [biostars post](https://www.biostars.org/p/279097/#389228):
 ```R
 x <- as.data.frame(res)
 
@@ -427,7 +427,40 @@ filt <- na.omit(y)
 write.table(filt, file="/Users/barrydigby/Desktop/DE_genes.rnk", quote = F, sep = "\t", row.names = F, col.names = F)
 ```
 
+A second method to generate the pre-ranked file for [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html) is detailed by [Stephen Turner](https://stephenturner.github.io/deseq-to-fgsea/#using_the_fgsea_package). I decided to use this method for the analysis.
 
+```R
+res <- results(dds, tidy=TRUE)
+write.csv(res, file="/Users/barrydigby/Desktop/deseq_results_tidy.csv")
+```
+
+```R
+library(tidyverse)
+res <- read_csv("/Users/barrydigby/Desktop/deseq_results_tidy.csv")
+res
+```
+
+```R
+library(org.Hs.eg.db)
+ens2symbol <- AnnotationDbi::select(org.Hs.eg.db,
+                                    key=res$row, 
+                                    columns="SYMBOL",
+                                    keytype="ENSEMBL")
+ens2symbol <- as_tibble(ens2symbol)
+
+res <- inner_join(res, ens2symbol, by=c("row"="ENSEMBL"))
+
+res2 <- res %>% 
+  dplyr::select(SYMBOL, stat) %>% 
+  na.omit() %>% 
+  distinct() %>% 
+  group_by(SYMBOL) %>% 
+  summarize(stat=mean(stat))
+  
+write.table(res2, file="/Users/barrydigby/Desktop/fsgea.rnk", quote=F, sep="\t", row.names = F, col.names = F)
+```
+
+**multiple test statistics for the same gene are avergaed using this mehtod**.
 
 
 
