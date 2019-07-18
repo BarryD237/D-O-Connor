@@ -460,7 +460,7 @@ res2 <- res %>%
 write.table(res2, file="/Users/barrydigby/Desktop/fsgea.rnk", quote=F, sep="\t", row.names = F, col.names = F)
 ```
 
-**multiple test statistics for the same gene are avergaed using this mehtod**.
+**multiple test statistics for the same gene are avergaed using this method**.
 
 
 
