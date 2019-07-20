@@ -402,42 +402,20 @@ This can be selected in GSEA
 The annotation format we are using is Ensembl Gene ID's. In GSEA select ENSEMBL_human_gene.chip
 ***
 
-# GSEA Pre Ranked set
-GSEA provides the option to use a pre ranked gene list, where the most up regulated genes are at the top of the list, and the down regulated genes are at the bottom of the list. Unaffected genes lie in the middle of the list. To compute this list, use the results from DESeq2. We will need to convert the Ensembl gene ID's to gene symbols, and then calculate a metric score by dividing the -log10(pvalues) by the sign(log2foldchange) adapted from this [biostars post](https://www.biostars.org/p/279097/#389228):
-```R
-x <- as.data.frame(res)
+**The results of GSEA were not satisfactory, statistically significant pathways had pvalues of 0.00. I investigated other packages in R to carry out the same analysis**
 
-library("AnnotationDbi")
-library("org.Hs.eg.db")
-library(EnsDb.Hsapiens.v86)
+# fgsea
+Similar results and output plots can be generated using [fgsea](https://bioconductor.org/packages/release/bioc/html/fgsea.html):
 
-x$Gene <- mapIds(EnsDb.Hsapiens.v86,
-                    keys=row.names(x),
-                    column ="SYMBOL",
-                    keytype = "GENEID",
-                    multiVals = "first")
-
-x$fcsign <- sign(x$log2FoldChange)
-x$logP = -log10(x$pvalue)
-x$metric = x$logP*x$fcsign
-
-y <- x[,c("Gene", "metric")]
-filt <- na.omit(y)
-
-write.table(filt, file="/Users/barrydigby/Desktop/DE_genes.rnk", quote = F, sep = "\t", row.names = F, col.names = F)
-```
-
-A second method to generate the pre-ranked file for [fgsea](http://bioconductor.org/packages/release/bioc/html/fgsea.html) is detailed by [Stephen Turner](https://stephenturner.github.io/deseq-to-fgsea/#using_the_fgsea_package). I decided to use this method for the analysis.
+## Native Workflow
+In R, we can use the results of DESeq2 to capture information on the statistics of all genes in the differential expression analysis:
 
 ```R
 res <- results(dds, tidy=TRUE)
 write.csv(res, file="/Users/barrydigby/Desktop/deseq_results_tidy.csv")
-```
 
-```R
 library(tidyverse)
 res <- read_csv("/Users/barrydigby/Desktop/deseq_results_tidy.csv")
-res
 ```
 
 ```R
@@ -447,21 +425,67 @@ ens2symbol <- AnnotationDbi::select(org.Hs.eg.db,
                                     columns="SYMBOL",
                                     keytype="ENSEMBL")
 ens2symbol <- as_tibble(ens2symbol)
+ens2symbol
+```
 
+```R
 res <- inner_join(res, ens2symbol, by=c("row"="ENSEMBL"))
+res
+```
 
+```R
 res2 <- res %>% 
   dplyr::select(SYMBOL, stat) %>% 
   na.omit() %>% 
   distinct() %>% 
   group_by(SYMBOL) %>% 
   summarize(stat=mean(stat))
-  
-write.table(res2, file="/Users/barrydigby/Desktop/fsgea.rnk", quote=F, sep="\t", row.names = F, col.names = F)
+res2
+
+ranks <- deframe(res2)
 ```
 
-**multiple test statistics for the same gene are avergaed using this method**.
+The **fgsea** workflow can now fork to the gene sets of interest
 
+### Hallmarks
+"Hallmark gene sets summarize and represent specific well-defined biological states or processes." To use the hallmark gene sets on our dataset, the gene set can be downloaded from the following [link](http://software.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/msigdb/6.2/h.all.v6.2.symbols.gmt). 
+
+This step assumed you have completed the fgsea native workflow up to ranks <- deframe(res2). 
+
+```R
+pathways.hallmark <- gmtPathways("/Users/barrydigby/Desktop/h.all.v6.2.symbols.gmt")
+```
+
+```R
+fgseaRes <- fgsea(pathways=pathways.hallmark, stats=ranks, nperm=10000) %>% 
+  as_tibble() %>% 
+  arrange(padj)
+```
+
+```R
+fgseaResTidy <- fgseaRes %>%
+  as_tibble() %>%
+  arrange(desc(NES))
+
+fgseaResTidy %>% 
+  dplyr::select(-leadingEdge, -ES, -nMoreExtreme) %>% 
+  arrange(pval) %>% 
+  DT::datatable()
+```
+
+```R
+outfile="/Users/barrydigby/Desktop/fgsea/hallmarks/Hallmark_Pathways.pdf"
+pdf(file=outfile, width = 8)
+ggplot(fgseaResTidy, aes(reorder(pathway, NES), NES)) +
+  geom_col(aes(fill=pval<0.05)) +
+  coord_flip() +
+  labs(x="Pathway", y="Normalized Enrichment Score",
+       title="Hallmark pathways NES from GSEA") + 
+  theme_minimal()
+dev.off()
+```
+
+[alt name](https://github.com/BarryD237/D-O-Connor/blob/master/Images/hallmarks.png)
 
 
 
