@@ -487,7 +487,25 @@ dev.off()
 
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/hallmarks.png)
 
+Using a pvalue cutoff of 0.05, Enrichment plots for each pathway was generated using the following code: 
 
+```R
+filtered_pathway <- subset(fgseaResTidy, pval < 0.05)
+
+filt_p <- as.vector(filtered_pathway$pathway)
+
+for (i in filt_p){
+    pdf(paste0(i,".pdf"),height=5,width=7.5)
+    plt <- plotEnrichment(pathway = pathways.hallmark[[i]], 
+    gseaParam = 1, ticksSize = 0.5, stats= ranks) + 
+    labs(title=i) + theme(plot.title = element_text(hjust = 0.5, face="bold"))
+    print(plt)
+    dev.off()
+}
+```
+
+The results of the 'Hallmark' pathways can be found in:
+> Results/GSEA/Hallmarks
 
 
 
