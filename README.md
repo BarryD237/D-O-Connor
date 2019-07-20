@@ -419,7 +419,7 @@ x$Gene <- mapIds(EnsDb.Hsapiens.v86,
 
 x$fcsign <- sign(x$log2FoldChange)
 x$logP = -log10(x$pvalue)
-x$metric = x$logP/x$fcsign
+x$metric = x$logP*x$fcsign
 
 y <- x[,c("Gene", "metric")]
 filt <- na.omit(y)
