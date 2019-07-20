@@ -497,7 +497,7 @@ filt_p <- as.vector(filtered_pathway$pathway)
 for (i in filt_p){
     pdf(paste0(i,".pdf"),height=5,width=7.5)
     plt <- plotEnrichment(pathway = pathways.hallmark[[i]], 
-    gseaParam = 1, ticksSize = 0.5, stats= ranks) + 
+    gseaParam = 1, ticksSize = 0.3, stats= ranks) + 
     labs(title=i) + theme(plot.title = element_text(hjust = 0.5, face="bold"))
     print(plt)
     dev.off()
@@ -507,5 +507,11 @@ for (i in filt_p){
 The results of the 'Hallmark' pathways can be found in:
 > Results/GSEA/Hallmarks
 
+Below is an example of an enrichment plot: 
 
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/enrichment_plt.png)
+
+This plot uses Normalized Enrichment Score (NES) to plot genes. Breifly, if a peak occurs to the left of the graph, the genes involved in this pathway have positive NES scores, and can be considered upregulated in the pathway. If a pathway is downregulated in Tumour cells, then the plot will have a negative peak on the right hand side, indicating genes involved have a negative NES and are thus downregulated in the pathway. 
+
+The example above shows genes are upregulated in the epithelial to mesenchymal pathway, consistent with tumour cell activity. 
 
