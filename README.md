@@ -515,3 +515,18 @@ This plot uses Normalized Enrichment Score (NES) to plot genes. Breifly, if a pe
 
 The example above shows genes are upregulated in the epithelial to mesenchymal pathway, consistent with tumour cell activity. 
 
+#### Using Enrichment Plots in Paper
+To use the enrichment plot in the results of your experiement, I would suggest citing the NES and pvalue of the pathway. 
+
+For each pathway, the NES, pvalue and genes involved in the pathway are included in a statistics report. The report was generated as follows....
+
+```R
+#leading edge is a list, need to collapse the list to vector
+filtered_pathway$leadingEdge <- vapply(filtered_pathway$leadingEdge, paste, collapse = ",", character(1L))
+
+stats <- data.frame(pathway=filtered_pathway$pathway) %>%
+         data.frame(pvalue=filtered_pathway$pval) %>%
+         data.frame(NES=filtered_pathway$NES) %>%
+         data.frame(genes=filtered_pathway$leadingEdge)
+
+write.csv(stats, file = "/Users/barrydigby/Desktop/fgsea/hallmarks/hallmark_pathway_stats.csv", quote = TRUE, col.names = TRUE, row.names = FALSE) #quote=F to avoid splitting by ','
