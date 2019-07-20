@@ -485,7 +485,7 @@ ggplot(fgseaResTidy, aes(reorder(pathway, NES), NES)) +
 dev.off()
 ```
 
-[alt name](https://github.com/BarryD237/D-O-Connor/blob/master/Images/hallmarks.png)
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/hallmarks.png)
 
 
 
