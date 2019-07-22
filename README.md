@@ -529,4 +529,27 @@ stats <- data.frame(pathway=filtered_pathway$pathway) %>%
          data.frame(NES=filtered_pathway$NES) %>%
          data.frame(genes=filtered_pathway$leadingEdge)
 
-write.csv(stats, file = "/Users/barrydigby/Desktop/fgsea/hallmarks/hallmark_pathway_stats.csv", quote = TRUE, col.names = TRUE, row.names = FALSE) #quote=F to avoid splitting by ','
+write.csv(stats, file = "/Users/barrydigby/Desktop/fgsea/hallmarks/hallmark_pathway_stats.csv", quote = TRUE, col.names = TRUE, row.names = FALSE) #quote=T to avoid splitting by ','
+```
+
+#### Quick view Up/Down Regulated pathways
+Two plots of up/down regulated pathways are generated using the log10(pvalue). An example of upregulated pathways is shown below:
+
+```R
+filtered_pathway <- subset(fgseaResTidy, pval < 0.05)
+
+filt_up <- subset(filtered_pathway, NES > 0.0)
+filt_up$log10 <- -log10(filt_up$pval)
+filt_up$pathway <- str_replace_all(filt_up$pathway, c("HALLMARK"="", "_"=" "))
+
+outfile="/Users/barrydigby/Desktop/fgsea/hallmarks/Hallmark_UPREG.pdf"
+pdf(file=outfile, width = 8)
+ggplot(data=filt_up, aes(x=reorder(pathway,log10), y=log10)) + 
+      geom_bar(stat="identity", fill="steelblue", width = 0.7) +
+      coord_flip() +
+      labs(x="Pathways" y="pvalue (-log10)") +
+      theme_minimal()
+dev.off()
+```
+
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/upreg_hallmark.png)
