@@ -188,12 +188,14 @@ eigencorplot(p,
 ```
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/pearson_eigcor.png)
 ***
-Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **Age** has sufficient weight in PC2 to be factored into the DESeq2 model. **PR** also carries weight on PC2, however I have decided to omit this factor from the DESeq2 model. **PR** is an indicator of pathological cancer status, however the model already corrects for cancer status (Tumour/Normal) using **Condition**. Unless the researcher wishes to investigate the data further by comparing **ER / PR / LVI** status, it is recommended to use a basic model at first. 
+Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **Age** has sufficient weight in PC2 to warrant further investigation. If PCA shows that age is clustering into groups, then it is worth grouping age into meaningful groups (age bins) and accounting for them in our DESeq2 model. 
 
-### Corrected DESeq2 model:
-```
-design= ~Patient + Age + Condition
-```
+#### Investigating Age in PCA
+![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/PCA-age.png) 
+
+By splitting the age groups into bins, we can see that no clear clustering is formed. Age is this omitted from the model. Per Michael Love: "I don't like to add "age" alone to the design as it implies that log gene expression increases linearly with years of life.".
+
+
 ***
 # Inspecting the Data
 ```R
@@ -253,10 +255,10 @@ res <- results(dds, filterFun=ihw, alpha=0.05, name="Condition_Tumour_vs_Normal"
 summary(res)
 ```
 ```
-out of 17137 with nonzero total read count
+out of 29357 with nonzero total read count
 adjusted p-value < 0.05
-LFC > 0 (up)       : 586, 3.4%
-LFC < 0 (down)     : 603, 3.5%
+LFC > 0 (up)       : 576, 2%
+LFC < 0 (down)     : 544, 1.9%
 outliers [1]       : 0, 0%
 [1] see 'cooksCutoff' argument of ?results
 see metadata(res)$ihwResult on hypothesis weighting
