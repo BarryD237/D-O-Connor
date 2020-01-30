@@ -188,7 +188,7 @@ eigencorplot(p,
 ```
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/pearson_eigcor.png)
 ***
-Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **Age** has sufficient weight in PC2 to warrant further investigation. If PCA shows that age is clustering into groups, then it is worth grouping age into meaningful groups (age bins) and accounting for them in our DESeq2 model. 
+Given the results of the eigen correlation plots, we can see that **patient** and **Condition** are the source of main variation on PC1. These factors are already being accounted for in the DESeq2 model. Interestingly, **PR** has sufficient weight in PC2 to warrant further investigation. If PCA shows that age is clustering into groups, then it is worth grouping age into meaningful groups (age bins) and accounting for them in our DESeq2 model. 
 
 #### Investigating Age in PCA
 ![alt text](https://github.com/BarryD237/D-O-Connor/blob/master/Images/PCA-age.png) 
